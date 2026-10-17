@@ -1,0 +1,71 @@
+@AbacAuthorization_HostAddress = http://localhost:5088
+@Token = SEU_TOKEN_JWT_AQUI
+@DocumentId = 00000000-0000-0000-0000-000000000000
+
+### 1. Registrar usuário do departamento Financeiro
+POST {{AbacAuthorization_HostAddress}}/auth/register
+Content-Type: application/json
+
+{
+  "email": "alice@empresa.com",
+  "password": "Password123!",
+  "department": "Finance",
+  "role": "user"
+}
+
+### 2. Registrar usuário Admin
+POST {{AbacAuthorization_HostAddress}}/auth/register
+Content-Type: application/json
+
+{
+  "email": "admin@empresa.com",
+  "password": "Password123!",
+  "department": "IT",
+  "role": "admin"
+}
+
+### 3. Login
+POST {{AbacAuthorization_HostAddress}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "alice@empresa.com",
+  "password": "Password123!"
+}
+
+### 4. Criar documento (Requer mesmo Department do usuário)
+POST {{AbacAuthorization_HostAddress}}/documents
+Authorization: Bearer {{Token}}
+Content-Type: application/json
+
+{
+  "title": "Relatório Q3",
+  "department": "Finance",
+  "content": "Conteúdo confidencial do departamento financeiro"
+}
+
+### 5. Ler documento (Permitido para o Author ou mesmo Department)
+GET {{AbacAuthorization_HostAddress}}/documents/{{DocumentId}}
+Authorization: Bearer {{Token}}
+Accept: application/json
+
+### 6. Atualizar documento (Requer ser o Author e manter o documento no seu Department)
+PUT {{AbacAuthorization_HostAddress}}/documents/{{DocumentId}}
+Authorization: Bearer {{Token}}
+Content-Type: application/json
+
+{
+  "title": "Relatório Q3 - Atualizado",
+  "department": "Finance",
+  "content": "Conteúdo atualizado"
+}
+
+### 7. Ler documento via rota Admin (Requer role "admin" e horário entre 07:00 e 23:00 de America/Sao_Paulo)
+GET {{AbacAuthorization_HostAddress}}/admin/documents/{{DocumentId}}
+Authorization: Bearer {{Token}}
+Accept: application/json
+
+### 8. Excluir documento (Requer ser o Author)
+DELETE {{AbacAuthorization_HostAddress}}/documents/{{DocumentId}}
+Authorization: Bearer {{Token}}
+
