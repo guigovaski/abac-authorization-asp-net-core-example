@@ -33,8 +33,7 @@ public class DocumentAuthorizationHandler(TimeProvider timeProvider, IOptions<Bu
     {
         var isAuthorized = requirement.Name switch
         {
-            // Criar: o usuário só pode criar documentos no próprio departamento
-            // (o autor é sempre preenchido a partir do token, então não há o que comparar)
+            // Criar: o usuário só pode criar documentos no próprio departamento            
             nameof(DocumentOperations.Create) =>
                 IsSameDepartment(context, resource),
 

@@ -37,7 +37,7 @@ public static class AuthEndpoints
                 if (request.Department is not null)
                 {
                     await userManager.AddClaimAsync(user, new Claim("Department", request.Department));
-                }                
+                }
 
                 return Results.Created();
             }).AllowAnonymous();
